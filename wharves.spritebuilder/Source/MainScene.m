@@ -1,18 +1,25 @@
 #import "MainScene.h"
 
-@implementation MainScene { CCNode *troy;}
+@implementation MainScene {
+    CCNode *troy;
+    CCNode *contentNode;
+}
 
 - (void)didLoadFromCCB {
     // tell this scene to accept touches
     self.userInteractionEnabled = TRUE;
+    
+    // the bounding box is set by the size of the main scene in spritebuilder
+    CGRect box = CGRectMake(0, 0, self.boundingBox.size.width, self.boundingBox.size.height);
+    CCActionFollow *follow = [CCActionFollow actionWithTarget:troy worldBoundary:box];
+    [contentNode runAction:follow];
 }
 - (void)touchBegan:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     // ensure followed object is in visible are when starting
     self.position = ccp(0,0);
-    CCActionFollow *follow = [CCActionFollow actionWithTarget:troy ];
-    [self runAction:follow];
-    CGPoint p = [touch locationInNode:self];
+    
+    CGPoint p = [touch locationInNode:contentNode];
     p.y = troy.position.y;
     CCActionMoveTo *move = [CCActionMoveTo actionWithDuration:3.0 position:p];
     CCActionFlipX *flip;
